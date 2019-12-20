@@ -7,6 +7,7 @@
     <e p="D:\Coding\super-cactus" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
       <e p="super-cactus" t="IncludeRecursive">
+        <e p=".gitignore" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Modules" t="Include">
           <e p="Add.cs" t="Include" />

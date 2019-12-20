@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="97fcd954-96fb-43be-abc6-a699c3ab63bf" name="Default Changelist" comment="" />
+    <list default="true" id="97fcd954-96fb-43be-abc6-a699c3ab63bf" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.super-cactus/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.super-cactus/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.super-cactus/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.super-cactus/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/02DE10A4-DA01-49DE-A57B-50C54BA4697F/15/1fa25532/SocketMessage.cs" root0="SKIP_HIGHLIGHTING" />
@@ -30,10 +36,12 @@
         <option value="$PROJECT_DIR$/super-cactus/Structs/Event.cs" />
         <option value="$PROJECT_DIR$/super-cactus/Structs/ServerData.cs" />
         <option value="$PROJECT_DIR$/super-cactus/Program.cs" />
+        <option value="$PROJECT_DIR$/super-cactus/.gitignore" />
       </list>
     </option>
   </component>
   <component name="ProjectId" id="1V2pg1dtCB4AkgO0cmNLF3IvSNd" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -42,6 +50,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TWShift.4" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -95,6 +104,7 @@
       <workItem from="1576550651028" duration="2899000" />
       <workItem from="1576554926037" duration="183000" />
       <workItem from="1576713733504" duration="4359000" />
+      <workItem from="1576808589886" duration="237000" />
     </task>
     <servers />
   </component>
