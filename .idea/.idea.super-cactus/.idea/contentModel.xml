@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\demouser\.Rider2019.3\config\scratches" t="IncludeRecursive" />
+    <e p="C:\Users\demouser\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\demouser\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_super-cactus.809319524.00" t="ExcludeRecursive" />
+    <e p="D:\Coding\super-cactus" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="super-cactus" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Modules" t="Include">
+          <e p="Add.cs" t="Include" />
+          <e p="Help.cs" t="Include" />
+          <e p="Ping.cs" t="Include" />
+          <e p="Setting.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.0" t="Include">
+              <e p="super-cactus.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Structs" t="Include">
+          <e p="Event.cs" t="Include" />
+          <e p="ServerData.cs" t="Include" />
+        </e>
+        <e p="super-cactus.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="super-cactus.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>
