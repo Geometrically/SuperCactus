@@ -61,7 +61,7 @@ cmake-build-*/
 # IntelliJ
 out/
 
-supercactus/app.config
+super-cactus/app.config
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
