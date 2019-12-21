@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using super_cactus.Models;
 
 namespace super_cactus.Modules
 {
@@ -9,7 +10,7 @@ namespace super_cactus.Modules
     {
         [Command("add")]
         [Summary("A command to add an event to the calendar")]
-        public async Task AddAsync(string type, string className, string quizName, string description, string date, IRole group)
+        public async Task AddAsync(string type, string className, string name, string description, string date)
         {
             if (type.ToLower() != "quiz" && type.ToLower() != "test" && type.ToLower() != "event")
             {
@@ -26,10 +27,20 @@ namespace super_cactus.Modules
             DateTime parsedDate;
             if (DateTime.TryParse(date, out parsedDate))
             {
+                await Program.AddEventAsync(new Event
+                {
+                    Type = type,
+                    ClassName = className,
+                    Name = name,
+                    Description = description,
+                    Date = parsedDate,
+                    ServerId = Context.Guild.Id
+                });
+                
                 var builder = new EmbedBuilder()
                     .WithTitle(char.ToUpper(type[0]) + type.Substring(1) + " Added")
-                    .WithDescription($"Quiz added for {className} on {parsedDate} for {group.Mention}!")
-                    .AddField(new EmbedFieldBuilder().WithName(quizName).WithValue(description))
+                    .WithDescription($"{char.ToUpper(type[0]) + type.Substring(1)} added for {className} on {parsedDate}!")
+                    .AddField(new EmbedFieldBuilder().WithName(name).WithValue(description))
                     .WithColor(Color.Green)
                     .WithFooter("Created by Jai")
                     .WithAuthor(Context.User);

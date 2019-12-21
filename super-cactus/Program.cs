@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Configuration;
+using System.Data.SQLite;
 using System.Reflection;
 using System.Threading.Tasks;
+using Dapper;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using super_cactus.Models;
+
 namespace super_cactus
 {
     public class Program
@@ -14,8 +18,6 @@ namespace super_cactus
         private CommandService _commands;
         private IServiceProvider _services;
         
-        private const string _token = "NjU1OTUxMjIyMTEyNTE4MTY0.Xfbs0Q.Iitov1BSpltzNL7Ukw01QMtdCdw";
-
         private static void Main(string[] args) => new Program().RunBotAsync().GetAwaiter().GetResult();
 
         public async Task RunBotAsync()
@@ -33,7 +35,7 @@ namespace super_cactus
 
             _client.JoinedGuild += AddServerAsync;
             
-            await _client.LoginAsync(TokenType.Bot, _token);
+            await _client.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["BotToken"]);
 
             await _client.StartAsync();
 
@@ -81,10 +83,28 @@ namespace super_cactus
                 }
             }
         }
+        
+        public static async Task AddEventAsync(Event eventData)
+        {
+            await using (var connection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["Default"].ConnectionString))
+            {
+                await connection.ExecuteAsync("insert into Events(Type, ClassName, Date, Name, Description, ServerId) values (@Type, @ClassName, @Date, @Name, @Description, @ServerId)", eventData);
+            }
+        }
+        
 
         private async Task AddServerAsync(SocketGuild guild)
         {
+            var server = new ServerData
+            {
+                CalendarChannelId = guild.DefaultChannel.Id,
+                Id = guild.Id
+            };
             
+            await using (var connection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["Default"].ConnectionString))
+            {
+                await connection.ExecuteAsync("INSERT INTO Servers(CalendarChannelId, Id) values (@CalendarChannelId, @Id)", server);
+            }
         }
     }
 }
