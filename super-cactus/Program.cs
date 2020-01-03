@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.SQLite;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Dapper;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -78,6 +77,8 @@ namespace super_cactus
                         .WithDescription(result.ErrorReason)
                         .WithFooter("Created by Jai")
                         .WithColor(Color.Red);
+                    
+                    Console.WriteLine(result.Error);
 
                     await msg.Channel.SendMessageAsync("", false, error.Build());
                 }
@@ -86,10 +87,12 @@ namespace super_cactus
         
         public static async Task AddEventAsync(Event eventData)
         {
-            await using (var connection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["Default"].ConnectionString))
-            {
-                await connection.ExecuteAsync("insert into Events(Type, ClassName, Date, Name, Description, ServerId) values (@Type, @ClassName, @Date, @Name, @Description, @ServerId)", eventData);
-            }
+            await using var connection = new CactusContext();
+            
+            await connection.AddAsync(eventData);
+            await connection.SaveChangesAsync();
+            
+            await connection.DisposeAsync();
         }
         
 
@@ -101,10 +104,12 @@ namespace super_cactus
                 Id = guild.Id
             };
             
-            await using (var connection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["Default"].ConnectionString))
-            {
-                await connection.ExecuteAsync("INSERT INTO Servers(CalendarChannelId, Id) values (@CalendarChannelId, @Id)", server);
-            }
+            await using var connection = new CactusContext();
+            
+            await connection.AddAsync(server);
+            await connection.SaveChangesAsync();
+
+            await connection.DisposeAsync();
         }
     }
 }

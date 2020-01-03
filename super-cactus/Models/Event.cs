@@ -2,7 +2,7 @@ using System;
 
 namespace super_cactus.Models
 {
-    public struct Event
+    public class Event
     {
         public string Type { get; set; }
         
@@ -13,6 +13,6 @@ namespace super_cactus.Models
         public string Name { get; set; }
         public string Description { get; set; }
         
-        public ulong ServerId { get; set; }
+        public ulong Id { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace super_cactus.Modules
                     Name = name,
                     Description = description,
                     Date = parsedDate,
-                    ServerId = Context.Guild.Id
+                    Id = Context.Guild.Id
                 });
                 
                 var builder = new EmbedBuilder()
