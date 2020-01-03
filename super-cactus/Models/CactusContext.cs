@@ -9,7 +9,7 @@ namespace super_cactus.Models
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Event>().ToTable("Post");
+            modelBuilder.Entity<Event>().ToTable("Event");
             modelBuilder.Entity<ServerData>().ToTable("ServerData");
         }
     }

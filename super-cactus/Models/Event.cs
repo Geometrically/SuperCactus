@@ -13,6 +13,7 @@ namespace super_cactus.Models
         public string Name { get; set; }
         public string Description { get; set; }
         
+        public ulong ServerId { get; set; }
         public ulong Id { get; set; }
     }
 }

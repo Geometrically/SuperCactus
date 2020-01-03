@@ -88,10 +88,12 @@ namespace super_cactus
         public static async Task AddEventAsync(Event eventData)
         {
             await using var connection = new CactusContext();
-            
+
+            await connection.Database.EnsureCreatedAsync();
+
             await connection.AddAsync(eventData);
             await connection.SaveChangesAsync();
-            
+
             await connection.DisposeAsync();
         }
         
@@ -105,6 +107,8 @@ namespace super_cactus
             };
             
             await using var connection = new CactusContext();
+            
+            await connection.Database.EnsureCreatedAsync();
             
             await connection.AddAsync(server);
             await connection.SaveChangesAsync();

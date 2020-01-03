@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Quartz;
+using super_cactus.Jobs;
 using super_cactus.Models;
 
 namespace super_cactus.Modules
@@ -34,9 +36,23 @@ namespace super_cactus.Modules
                     Name = name,
                     Description = description,
                     Date = parsedDate,
-                    Id = Context.Guild.Id
+                    ServerId = Context.Guild.Id,
+                    Id = Context.Message.Id
                 });
                 
+                var job = JobBuilder.Create<EventJob>()
+                    .WithIdentity(Context.Message.Id.ToString(), type)
+                    .UsingJobData("type", type)
+                    .UsingJobData("classname", className)
+                    .UsingJobData("name", name)
+                    .UsingJobData("description", description)
+                    .Build();
+                
+                var trigger = TriggerBuilder.Create()
+                    .WithIdentity("", type)
+                    .StartAt(parsedDate)
+                    .Build();
+
                 var builder = new EmbedBuilder()
                     .WithTitle(char.ToUpper(type[0]) + type.Substring(1) + " Added")
                     .WithDescription($"{char.ToUpper(type[0]) + type.Substring(1)} added for {className} on {parsedDate}!")
