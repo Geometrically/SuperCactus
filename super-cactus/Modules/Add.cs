@@ -2,9 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Quartz;
-using super_cactus.Jobs;
-using super_cactus.Models;
+using Discord.WebSocket;
+using FluentScheduler;
 
 namespace super_cactus.Modules
 {
@@ -12,7 +11,7 @@ namespace super_cactus.Modules
     {
         [Command("add")]
         [Summary("A command to add an event to the calendar")]
-        public async Task AddAsync(string type, string className, string name, string description, string date)
+        public async Task AddAsync(string type, string date, ISocketMessageChannel reminderChannel, string className, string name, [Remainder] string description)
         {
             if (type.ToLower() != "quiz" && type.ToLower() != "test" && type.ToLower() != "event")
             {
@@ -26,32 +25,27 @@ namespace super_cactus.Modules
                 return;
             }
 
-            DateTime parsedDate;
-            if (DateTime.TryParse(date, out parsedDate))
+            DateTimeOffset parsedDate;
+            
+            if (DateTimeOffset.TryParse(date, out parsedDate))
             {
-                await Program.AddEventAsync(new Event
-                {
-                    Type = type,
-                    ClassName = className,
-                    Name = name,
-                    Description = description,
-                    Date = parsedDate,
-                    ServerId = Context.Guild.Id,
-                    Id = Context.Message.Id
-                });
-                
-                var job = JobBuilder.Create<EventJob>()
-                    .WithIdentity(Context.Message.Id.ToString(), type)
-                    .UsingJobData("type", type)
-                    .UsingJobData("classname", className)
-                    .UsingJobData("name", name)
-                    .UsingJobData("description", description)
-                    .Build();
-                
-                var trigger = TriggerBuilder.Create()
-                    .WithIdentity("", type)
-                    .StartAt(parsedDate)
-                    .Build();
+                if((parsedDate - DateTime.Now).Days + 1 >= 5)
+                    JobManager.AddJob(
+                        () => SendEventMessage(type, parsedDate.Date, reminderChannel, className, name, description), 
+                        s => s.ToRunOnceAt(parsedDate.Date.AddDays(-5)));
+                if((parsedDate - DateTime.Now).Days + 1 >= 3)
+                    JobManager.AddJob(
+                        () => SendEventMessage(type, parsedDate.Date, reminderChannel, className, name, description), 
+                        s => s.ToRunOnceAt(parsedDate.Date.AddDays(-5)));
+                if((parsedDate - DateTime.Now).Days + 1 >= 1)
+                    JobManager.AddJob(
+                        () => SendEventMessage(type, parsedDate.Date, reminderChannel, className, name, description), 
+                        s => s.ToRunOnceAt(parsedDate.Date.AddDays(-5)));
+                    
+                JobManager.AddJob(
+                    () => SendEventMessage(type, parsedDate.Date, reminderChannel, className, name, description), 
+                    s => s.ToRunOnceAt(parsedDate.Date));
+
 
                 var builder = new EmbedBuilder()
                     .WithTitle(char.ToUpper(type[0]) + type.Substring(1) + " Added")
@@ -60,7 +54,7 @@ namespace super_cactus.Modules
                     .WithColor(Color.Green)
                     .WithFooter("Created by Jai")
                     .WithAuthor(Context.User);
-
+                
                 await ReplyAsync("", false, builder.Build());
             }
             else
@@ -74,5 +68,30 @@ namespace super_cactus.Modules
                 await ReplyAsync("", false, error.Build());
             }
         }
+
+        public void SendEventMessage(string type, DateTime eventDate, ISocketMessageChannel reminderChannel, string className, string name, string description)
+        {
+            Program.SendMessage(reminderChannel.Id, new EmbedBuilder()
+                .WithTitle($"{char.ToUpper(type[0]) + type.Substring(1)} in {(eventDate - DateTime.Now).Days + 1} days!")
+                .AddField(new EmbedFieldBuilder()
+                    .WithName("Name:")
+                    .WithValue(name)
+                )
+                .AddField(new EmbedFieldBuilder()
+                    .WithName("Description:")
+                    .WithValue(description)
+                )
+                .AddField(new EmbedFieldBuilder()
+                    .WithName("Class:")
+                    .WithValue(className)
+                )
+                .AddField(new EmbedFieldBuilder()
+                    .WithName("Date:")
+                    .WithValue(eventDate.ToShortDateString())
+                )
+                .WithColor(Color.DarkGreen)
+                .WithFooter("Created by Jai", null)
+                .WithTimestamp(DateTimeOffset.Now));
+        } 
     }
 }

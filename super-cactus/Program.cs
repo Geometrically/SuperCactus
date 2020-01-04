@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Configuration;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using FluentScheduler;
 using Microsoft.Extensions.DependencyInjection;
-using super_cactus.Models;
 
 namespace super_cactus
 {
     public class Program
     {
-        private DiscordSocketClient _client;
+        private static DiscordSocketClient _client;
+        
         private CommandService _commands;
-        private IServiceProvider _services;
+        private IServiceProvider _services; 
         
         private static void Main(string[] args) => new Program().RunBotAsync().GetAwaiter().GetResult();
 
@@ -28,11 +28,14 @@ namespace super_cactus
                 .AddSingleton(_client)
                 .AddSingleton(_commands)
                 .BuildServiceProvider();
-            
-            _client.Log += Log; 
-            await RegisterCommandsAsync();
 
-            _client.JoinedGuild += AddServerAsync;
+            JobManager.Initialize(new Registry());
+            
+            _client.Log += Log;
+            JobManager.JobException += info =>
+                Log(new LogMessage(LogSeverity.Error, info.Name, info.Exception.Message, info.Exception));
+            
+            await RegisterCommandsAsync();
             
             await _client.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["BotToken"]);
 
@@ -46,7 +49,6 @@ namespace super_cactus
             Console.WriteLine(msg);
             
             return Task.CompletedTask;
-            
         }
 
         public async Task RegisterCommandsAsync()
@@ -84,36 +86,12 @@ namespace super_cactus
                 }
             }
         }
-        
-        public static async Task AddEventAsync(Event eventData)
+
+        public static void SendMessage(ulong channelId, EmbedBuilder embed)
         {
-            await using var connection = new CactusContext();
+            var channel = _client.GetChannel(channelId) as SocketTextChannel;
 
-            await connection.Database.EnsureCreatedAsync();
-
-            await connection.AddAsync(eventData);
-            await connection.SaveChangesAsync();
-
-            await connection.DisposeAsync();
-        }
-        
-
-        private async Task AddServerAsync(SocketGuild guild)
-        {
-            var server = new ServerData
-            {
-                CalendarChannelId = guild.DefaultChannel.Id,
-                Id = guild.Id
-            };
-            
-            await using var connection = new CactusContext();
-            
-            await connection.Database.EnsureCreatedAsync();
-            
-            await connection.AddAsync(server);
-            await connection.SaveChangesAsync();
-
-            await connection.DisposeAsync();
+            channel.SendMessageAsync("", false, embed.WithAuthor(_client.CurrentUser).Build());
         }
     }
 }
