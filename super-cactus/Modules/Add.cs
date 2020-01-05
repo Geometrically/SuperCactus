@@ -4,12 +4,15 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FluentScheduler;
+using super_cactus.Preconditions;
 
 namespace super_cactus.Modules
 {
     public class Add : ModuleBase<SocketCommandContext>
     {
         [Command("add")]
+        [RequireRole("Calendar Helper")]
+        [RequireUserPermission(GuildPermission.Administrator, Group = "Permission")]
         [Summary("A command to add an event to the calendar")]
         public async Task AddAsync(string type, string date, ISocketMessageChannel reminderChannel, string className, string name, [Remainder] string description)
         {
